@@ -2,20 +2,18 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 const mysql = require('mysql');
+const config = require('config');
+const dbConfig = config.get('Customer.dbConfig');
 
-//put password in a config,js
+
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-    res.locals.connection = mysql.createConnection({
-        host: 'localhost',
-        user: 'root',
-        password: '',
-        database: 'calgary_art'
-    });
+    res.locals.connection = mysql.createConnection(dbConfig);
     res.locals.connection.connect();
     next();
 });
+app.use(express.static('uploads'))
 app.use(express.json());
 require("./startup/routes")(app);
 
