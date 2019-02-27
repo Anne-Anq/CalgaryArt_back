@@ -2,8 +2,8 @@ const express = require('express');
 const app = express();
 const bodyParser = require("body-parser");
 const mysql = require('mysql');
-const config = require('config');
-const dbConfig = config.get('DATABASE_URL');
+//const config = require('config');
+//const dbConfig = config.get('DATABASE_URL');
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
