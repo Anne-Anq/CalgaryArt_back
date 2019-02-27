@@ -38,7 +38,6 @@ router.get('/:artist_id', function (req, res, next) {
 });
 // //Add an artist from user id
 router.post('/', function (req, res, next) {
-    console.log(req.body)
     const artist = {
         user_id: req.body.user_id,
         bio: req.body.bio ? req.body.bio : ''
@@ -53,7 +52,35 @@ router.post('/', function (req, res, next) {
         }
     });
 });
+router.put('/:artist_id', imageUpload('avatar'), function (req, res, next) {
+    const query = `UPDATE artists
+    SET  ?
+    WHERE id = ?`;
+    const artist = {
+        user_id: req.body.user_id,
+        bio: req.body.bio ? req.body.bio : ''
+    };
+    res.locals.connection.query(query, [artist, req.params.artist_id], function (error, results, fields) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
+            //If there is error, we send the error in the error section with 500 status
+        } else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+        }
+    });
+});
 
+router.delete('/:artist_id', function (req, res, next) {
+
+    res.locals.connection.query('DELETE FROM artists WHERE id = ?', req.params.artist_id, function (error, results, fields) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
+            //If there is error, we send the error in the error section with 500 status
+        } else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+        }
+    });
+});
 
 //ONE ART_PIECE
 router.get('/:artist_id/:ap_id', function (req, res, next) {

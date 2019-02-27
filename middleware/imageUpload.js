@@ -1,13 +1,13 @@
 const multer = require('multer');
 
-const newFileName = new Date().toISOString().replace(/[:.]/gi, '-');
+//const newFileName = new Date().toISOString().replace(/[:.]/gi, '-');
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, './uploads')
     },
     filename: function (req, file, cb) {
-        cb(null, `${newFileName}${file.mimetype === 'image/jpeg' ? '.jpg' : '.png'}`)
+        cb(null, `${Date.now()}${file.mimetype === 'image/jpeg' ? '.jpg' : '.png'}`)
     }
 })
 
