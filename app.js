@@ -5,11 +5,10 @@ const mysql = require('mysql');
 const config = require('config');
 const dbConfig = process.env.PORT ? DATABASE_URL : config.get('Customer.dbConfig');
 
-console.log(dbConfig)
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-    res.locals.connection = mysql.createConnection(dbConfig);
+    res.locals.connection = mysql.createConnection("mysql://b7c5948e745707:2e6359e3@us-cdbr-iron-east-03.cleardb.net/heroku_be2345cb5a88ff6?reconnect=true");
     res.locals.connection.connect();
     next();
 });
