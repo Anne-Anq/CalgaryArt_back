@@ -3,9 +3,9 @@ const app = express();
 const bodyParser = require("body-parser");
 const mysql = require('mysql');
 const config = require('config');
-const dbConfig = config.get('Customer.dbConfig');
+const dbConfig = process.env.PORT ? DATABASE_URL : config.get('Customer.dbConfig');
 
-
+console.log(dbConfig)
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
