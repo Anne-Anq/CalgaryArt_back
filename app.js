@@ -17,7 +17,8 @@ app.use(express.static('uploads'))
 app.use(express.json());
 require("./startup/routes")(app);
 
-
-app.listen(8080, function () {
-    console.log("Server running on 8080!");
+const port = parseInt(process.env.PORT, 10) || 8080;
+app.set('port', port);
+app.listen(port, function () {
+    console.log(`Server running on ${port}!`);
 });
