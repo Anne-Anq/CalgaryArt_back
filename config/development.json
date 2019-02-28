@@ -1,0 +1,14 @@
+{
+    "Customer": {
+        "dbConfig": {
+            "host": "localhost",
+            "user": "root",
+            "password": "",
+            "database": "calgary_art"
+        },
+        "jwtPrivateKey": "",
+        "baseURL": "http://localhost:8080/"
+    },
+    "DATABASE_URL": "DATABASE_URL",
+    "AccessControlAllowOrigin": "http://localhost:3000/"
+}

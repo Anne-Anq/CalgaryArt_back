@@ -1,0 +1,14 @@
+{
+    "Customer": {
+        "dbConfig": {
+            "host": "",
+            "user": "",
+            "password": "",
+            "database": ""
+        },
+        "jwtPrivateKey": "",
+        "baseURL": "http://localhost:8080/"
+    },
+    "DATABASE_URL": "DATABASE_URL",
+    "AccessControlAllowOrigin": "https://calgaryart-front.herokuapp.com/"
+}
