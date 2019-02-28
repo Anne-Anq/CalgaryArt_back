@@ -11,6 +11,7 @@ app.use(function (req, res, next) {
     try {
         res.locals.connection = mysql.createConnection(dbConfig);
         res.locals.connection.connect();
+        console.log('now connected to ', dbConfig);
         next();
     } catch (err) {
         console.log(err)
