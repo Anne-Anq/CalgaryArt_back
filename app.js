@@ -8,9 +8,14 @@ const dbConfig = config.get('DATABASE_URL');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
-    res.locals.connection = mysql.createConnection(dbConfig);
-    res.locals.connection.connect();
-    next();
+    try {
+        res.locals.connection = mysql.createConnection(dbConfig);
+        res.locals.connection.connect();
+        next();
+    } catch (err) {
+        console.log(err)
+    }
+
 });
 app.use(express.static('uploads'))
 app.use(express.json());
