@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const imageUpload = require("../middleware/imageUpload");
 const config = require('config');
-const baseURL = config.get('Customer.baseURL');
+const baseURL = config.get('baseURL');
 
 router.post('/', imageUpload('avatar'), function (req, res, next) {
 
