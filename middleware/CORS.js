@@ -1,6 +1,6 @@
 const config = require("config");
-const AccessControlAllowOrigin = config.get("Access-Control-Allow-Origin");
-
+// const AccessControlAllowOrigin = config.get("Access-Control-Allow-Origin");
+const AccessControlAllowOrigin = process.env.AccessControlAllowOrigin;
 module.exports = function (req, res, next) {
   // Website you wish to allow to connect
   res.setHeader("Access-Control-Allow-Origin", AccessControlAllowOrigin);
