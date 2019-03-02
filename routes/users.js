@@ -36,5 +36,16 @@ router.put('/:user_id', imageUpload('avatar'), function (req, res, next) {
         }
     });
 });
+router.delete('/:user_id', function (req, res, next) {
+
+    res.locals.connection.query('DELETE FROM users WHERE id = ?', req.params.user_id, function (error, results, fields) {
+        if (error) {
+            res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
+            //If there is error, we send the error in the error section with 500 status
+        } else {
+            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+        }
+    });
+});
 
 module.exports = router;

@@ -1,5 +1,5 @@
 {
     "baseURL": "http://localhost:8080/",
     "DATABASE_URL": "DATABASE_URL",
-    "Access-Control-Allow-Origin": "http://localhost:3000/"
+    "Access-Control-Allow-Origin": "http://localhost:3000"
 }

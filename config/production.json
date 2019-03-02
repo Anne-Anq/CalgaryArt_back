@@ -1,5 +1,5 @@
 {
     "baseURL": "https://calgaryart-back.herokuapp.com/",
     "DATABASE_URL": "DATABASE_URL",
-    "Access-Control-Allow-Origin": "https://calgaryart-front.herokuapp.com/"
+    "Access-Control-Allow-Origin": "https://calgaryart-front.herokuapp.com"
 }
