@@ -1,4 +1,4 @@
 {
     "jwtPrivateKey": "CalgaryArt_jwtPrivateKey",
-    "DATABASE_URL": "CLEARDB_DATABASE_URL"
+    "DATABASE_URL": "DATABASE_URL"
 }

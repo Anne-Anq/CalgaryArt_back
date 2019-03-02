@@ -8,19 +8,17 @@ const baseURL = config.get('baseURL');
 //protect passwords
 //ALL ARTISTS
 router.get('/', function (req, res, next) {
-    try {
-        res.locals.connection.query('SELECT artists.id AS artist_id, user_id, bio, artists.created_at, email, f_name, l_name, avatar_URL FROM artists JOIN users ON users.id = artists.user_id '
-            , function (error, results, fields) {
-                if (error) {
-                    res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
-                    //If there is error, we send the error in the error section with 500 status
-                } else {
-                    res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-                }
-            });
-    } catch (err) {
-        alert(err);
-    }
+
+    res.locals.connection.query('SELECT artists.id AS artist_id, user_id, bio, artists.created_at, email, f_name, l_name, avatar_URL FROM artists JOIN users ON users.id = artists.user_id '
+        , function (error, results, fields) {
+            if (error) {
+                res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
+                //If there is error, we send the error in the error section with 500 status
+            } else {
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+            }
+        });
+
 
 });
 
