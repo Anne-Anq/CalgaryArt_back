@@ -27,8 +27,8 @@ router.get('/:artist_id', function (req, res, next) {
     const query = `SELECT 
     artist_id, ap_name,art_pieces.id AS ap_id, ap_picture_URL, ap_price, ap_description
     FROM users 
-    JOIN artists ON users.id = artists.user_id 
-    JOIN art_pieces ON artists.id = art_pieces.artist_id
+    LEFT JOIN artists ON users.id = artists.user_id 
+    LEFT JOIN art_pieces ON artists.id = art_pieces.artist_id
     WHERE artists.id =${req.params.artist_id};`
     res.locals.connection.query(query, function (error, results, fields) {
         if (error) {

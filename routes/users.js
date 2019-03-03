@@ -16,14 +16,17 @@ router.get('/', function (req, res, next) {
     });
 });
 router.get('/:user_id', function (req, res, next) {
-    res.locals.connection.query(`SELECT * FROM users WHERE users.id =${req.params.user_id}`, function (error, results, fields) {
-        if (error) {
-            res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
-            //If there is error, we send the error in the error section with 500 status
-        } else {
-            res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-        }
-    });
+    res.locals.connection.query(`SELECT users.id AS user_id, email, f_name, l_name, avatar_URL, users.created_at, artists.id AS artist_id, bio
+    FROM users 
+    LEFT JOIN artists ON users.id = artists.user_id    
+    WHERE users.id =${req.params.user_id}`, function (error, results, fields) {
+            if (error) {
+                res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
+                //If there is error, we send the error in the error section with 500 status
+            } else {
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+            }
+        });
 });
 router.put('/:user_id', imageUpload('avatar'), function (req, res, next) {
     const query = `UPDATE users
