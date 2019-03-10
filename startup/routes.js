@@ -5,7 +5,7 @@ const users = require("../routes/users");
 const venues = require("../routes/venues");
 const artists = require("../routes/artists");
 const register = require("../routes/register");
-
+const artPieces = require("../routes/artPieces");
 
 module.exports = app => {
     app.use(express.json());
@@ -14,4 +14,5 @@ module.exports = app => {
     app.use("/api/users", users);
     app.use("/api/venues", venues);
     app.use("/api/artists", artists);
+    app.use("/api/artPieces", artPieces);
 };

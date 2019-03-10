@@ -10,8 +10,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function (req, res, next) {
     try {
         res.locals.connection = mysql.createConnection(dbConfig);
-        res.locals.connection.connect();
-        console.log('now connected to ', dbConfig);
+        //res.locals.connection.connect();
+        console.log('now connected to database');
         next();
     } catch (err) {
         console.log(err)

@@ -4,13 +4,14 @@ const imageUpload = require("../middleware/imageUpload");
 const config = require('config');
 const baseURL = config.get('baseURL');
 
-//api/artists
+//api/artPieces
 //protect passwords
 
 
-//ALL ARTISTS
+//ALL ART_PIECES
 router.get('/', function (req, res, next) {
-    res.locals.connection.query('SELECT artists.id, f_name, l_name, avatar_URL FROM artists JOIN users ON artists.user_id = users.id'
+    const query = `SELECT id, ap_name, ap_picture_URL FROM  art_pieces`
+    res.locals.connection.query(query
         , function (error, results, fields) {
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
@@ -23,15 +24,17 @@ router.get('/', function (req, res, next) {
 
 
 
-//ONE ARTIST
-router.get('/:artist_id', function (req, res, next) {
+//ONE ART_PIECE
+router.get('/:ap_id', function (req, res, next) {
     const query = `SELECT 
-    artist_id, ap_name,art_pieces.id AS ap_id, ap_picture_URL, ap_price, ap_description,
-    avatar_URL, f_name, l_name, bio
+    f_name, l_name, ap_name, ap_description, ap_price, ap_picture_URL, artist_id, ap_id, venue_id, 
+    b_name, date_from, date_to, exhibitions.id AS exhibition_id, users.avatar_URL
     FROM users 
-    LEFT JOIN artists ON users.id = artists.user_id 
-    LEFT JOIN art_pieces ON artists.id = art_pieces.artist_id
-    WHERE artists.id =${req.params.artist_id};`
+    JOIN artists ON users.id = artists.user_id 
+    JOIN art_pieces ON artists.id = art_pieces.artist_id
+    JOIN exhibitions ON art_pieces.id = exhibitions.ap_id
+    JOIN venues ON exhibitions.venue_id = venues.id
+    WHERE art_pieces.id =${req.params.ap_id};`
     res.locals.connection.query(query, function (error, results, fields) {
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
@@ -43,14 +46,17 @@ router.get('/:artist_id', function (req, res, next) {
 });
 
 
+//POST ART_PIECE
+router.post('/', imageUpload('ap_picture'), function (req, res, next) {
 
-// //Add an artist from user id
-router.post('/', function (req, res, next) {
-    const artist = {
-        user_id: req.body.user_id,
-        bio: req.body.bio ? req.body.bio : ''
+    const art_piece = {
+        ap_name: req.body.ap_name ? req.body.ap_name : 'unnamed',
+        ap_description: req.body.ap_description ? req.body.ap_description : '',
+        ap_price: req.body.ap_price ? req.body.ap_price : 0,
+        ap_picture_URL: req.file ? `${baseURL}${req.file.filename}` : '',
+        artist_id: req.body.artist_id
     };
-    res.locals.connection.query('INSERT INTO artists SET ?', artist, function (error, results, fields) {
+    res.locals.connection.query('INSERT INTO art_pieces SET ?', art_piece, function (error, results, fields) {
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
             //If there is error, we send the error in the error section with 500 status
@@ -61,17 +67,20 @@ router.post('/', function (req, res, next) {
 });
 
 
-
-//UPDATE ARTIST
-router.put('/:artist_id', imageUpload('avatar'), function (req, res, next) {
-    const query = `UPDATE artists
+//UPDATE
+router.put('/:ap_id', imageUpload('ap_picture'), function (req, res, next) {
+    const query = `UPDATE art_pieces
     SET  ?
     WHERE id = ?`;
-    const artist = {
-        user_id: req.body.user_id,
-        bio: req.body.bio ? req.body.bio : ''
+    const art_piece = {
+        ap_name: req.body.ap_name ? req.body.ap_name : 'unnamed',
+        ap_description: req.body.ap_description ? req.body.ap_description : '',
+        ap_price: req.body.ap_price ? req.body.ap_price : 0,
+        ap_picture_URL: req.file ? `${baseURL}${req.file.filename}` : '',
+        artist_id: req.body.artist_id
     };
-    res.locals.connection.query(query, [artist, req.params.artist_id], function (error, results, fields) {
+
+    res.locals.connection.query(query, [art_piece, req.params.ap_id], function (error, results, fields) {
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
             //If there is error, we send the error in the error section with 500 status
@@ -82,11 +91,10 @@ router.put('/:artist_id', imageUpload('avatar'), function (req, res, next) {
 });
 
 
+//DELETE
+router.delete('/:ap_id', function (req, res, next) {
 
-//DELETE ARTIST
-router.delete('/:artist_id', function (req, res, next) {
-
-    res.locals.connection.query('DELETE FROM artists WHERE id = ?', req.params.artist_id, function (error, results, fields) {
+    res.locals.connection.query('DELETE FROM art_pieces WHERE id = ?', req.params.ap_id, function (error, results, fields) {
         if (error) {
             res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
             //If there is error, we send the error in the error section with 500 status
@@ -95,7 +103,5 @@ router.delete('/:artist_id', function (req, res, next) {
         }
     });
 });
-
-
 
 module.exports = router;
