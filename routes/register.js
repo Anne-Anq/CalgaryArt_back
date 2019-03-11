@@ -3,9 +3,11 @@ const router = express.Router();
 const imageUpload = require("../middleware/imageUpload");
 const config = require('config');
 const baseURL = config.get('baseURL');
+const mysqlLib = require("mysqlLib");
 
-router.post('/', imageUpload('avatar'), function (req, res, next) {
-    try {
+
+mysqlLib.getConnection(function (err, mclient) {
+    router.post('/', imageUpload('avatar'), function (req, res, next) {
         const user = {
             email: req.body.email,
             hashed_password: req.body.password,//implement security
@@ -13,9 +15,7 @@ router.post('/', imageUpload('avatar'), function (req, res, next) {
             l_name: req.body.l_name ? req.body.l_name : '',
             avatar_URL: req.file ? `${baseURL}${req.file.filename}` : ''
         };
-
-
-        res.locals.connection.query('INSERT INTO users SET ?', user, function (error, results, fields) {
+        mclient.query('INSERT INTO users SET ?', user, function (error, results, fields) {
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
                 //If there is error, we send the error in the error section with 500 status
@@ -23,10 +23,6 @@ router.post('/', imageUpload('avatar'), function (req, res, next) {
                 res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
             }
         });
-    } catch (error) {
-        console.log(error)
-    }
-
+    });
 });
-
 module.exports = router;

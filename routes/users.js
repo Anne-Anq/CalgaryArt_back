@@ -3,11 +3,13 @@ const router = express.Router();
 const imageUpload = require("../middleware/imageUpload");
 const config = require('config');
 const baseURL = config.get('baseURL');
+const mysqlLib = require("mysqlLib");
+//api/users
 //protect passwords
 
-router.get('/', function (req, res, next) {
-    try {
-        res.locals.connection.query('SELECT * FROM users', function (error, results, fields) {
+mysqlLib.getConnection(function (err, mclient) {
+    router.get('/', function (req, res, next) {
+        mclient.query('SELECT * FROM users', function (error, results, fields) {
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
                 //If there is error, we send the error in the error section with 500 status
@@ -15,14 +17,9 @@ router.get('/', function (req, res, next) {
                 res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
             }
         });
-    } catch (error) {
-        console.log(error)
-    }
-
-});
-router.get('/:user_id', function (req, res, next) {
-    try {
-        res.locals.connection.query(`SELECT users.id AS user_id, email, f_name, l_name, avatar_URL, users.created_at, artists.id AS artist_id, bio
+    });
+    router.get('/:user_id', function (req, res, next) {
+        mclient.query(`SELECT users.id AS user_id, email, f_name, l_name, avatar_URL, users.created_at, artists.id AS artist_id, bio
     FROM users 
     LEFT JOIN artists ON users.id = artists.user_id    
     WHERE users.id =${req.params.user_id}`, function (error, results, fields) {
@@ -33,13 +30,8 @@ router.get('/:user_id', function (req, res, next) {
                     res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
                 }
             });
-    } catch (error) {
-        console.log(error)
-    }
-
-});
-router.put('/:user_id', imageUpload('avatar'), function (req, res, next) {
-    try {
+    });
+    router.put('/:user_id', imageUpload('avatar'), function (req, res, next) {
         const query = `UPDATE users
     SET  ?
     WHERE id = ?`;
@@ -51,7 +43,7 @@ router.put('/:user_id', imageUpload('avatar'), function (req, res, next) {
             avatar_URL: req.file ? `${baseURL}${req.file.filename}` : ''
         };
 
-        res.locals.connection.query(query, [user, req.params.user_id], function (error, results, fields) {
+        mclient.query(query, [user, req.params.user_id], function (error, results, fields) {
 
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
@@ -60,14 +52,9 @@ router.put('/:user_id', imageUpload('avatar'), function (req, res, next) {
                 res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
             }
         });
-    } catch (error) {
-        console.log(error)
-    }
-
-});
-router.delete('/:user_id', function (req, res, next) {
-    try {
-        res.locals.connection.query('DELETE FROM users WHERE id = ?', req.params.user_id, function (error, results, fields) {
+    });
+    router.delete('/:user_id', function (req, res, next) {
+        mclient.query('DELETE FROM users WHERE id = ?', req.params.user_id, function (error, results, fields) {
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
                 //If there is error, we send the error in the error section with 500 status
@@ -75,10 +62,6 @@ router.delete('/:user_id', function (req, res, next) {
                 res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
             }
         });
-    } catch (error) {
-        console.log(error)
-    }
-
+    });
 });
-
 module.exports = router;

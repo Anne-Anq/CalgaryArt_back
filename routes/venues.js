@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
+const mysqlLib = require("mysqlLib");
 
-
-router.get('/', function (req, res, next) {
-    try {
-        res.locals.connection.query('SELECT * FROM venues', function (error, results, fields) {
+mysqlLib.getConnection(function (err, mclient) {
+    router.get('/', function (req, res, next) {
+        mclient.query('SELECT * FROM venues', function (error, results, fields) {
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
                 //If there is error, we send the error in the error section with 500 status
@@ -12,10 +12,6 @@ router.get('/', function (req, res, next) {
                 res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
             }
         });
-    } catch (error) {
-        console.log(error)
-    }
-
+    });
 });
-
 module.exports = router;
