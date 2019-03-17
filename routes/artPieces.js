@@ -10,16 +10,15 @@ const mysqlLib = require("mysqlLib");
 mysqlLib.getConnection(function (err, mclient) {
     //ALL ART_PIECES
     router.get('/', function (req, res, next) {
-        const query = `SELECT id, ap_name, ap_picture_URL FROM  art_pieces`
-        mclient.query(query
-            , function (error, results, fields) {
-                if (error) {
-                    res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
-                    //If there is error, we send the error in the error section with 500 status
-                } else {
-                    res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
-                }
-            });
+        const query = `SELECT id, ap_name, ap_picture_URL FROM  art_pieces;`
+        mclient.query(query, function (error, results, fields) {
+            if (error) {
+                res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
+                //If there is error, we send the error in the error section with 500 status
+            } else {
+                res.send(JSON.stringify({ "status": 200, "error": null, "response": results }));
+            }
+        });
     });
     //ONE ART_PIECE
     router.get('/:ap_id', function (req, res, next) {

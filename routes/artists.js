@@ -10,7 +10,7 @@ const mysqlLib = require("mysqlLib");
 mysqlLib.getConnection(function (err, mclient) {
     //GET ALL ARTISTS
     router.get('/', function (req, res, next) {
-        const sql = 'SELECT artists.id, user_id, f_name, l_name, avatar_URL FROM artists JOIN users ON artists.user_id = users.id';
+        const sql = 'SELECT artists.id, user_id, f_name, l_name, avatar_URL FROM artists JOIN users ON artists.user_id = users.id;';
         mclient.query(sql, function (error, results, fields) {
             if (error) {
                 res.send(JSON.stringify({ "status": 500, "error": error, "response": null }));
